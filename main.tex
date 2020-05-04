@@ -1,8 +1,22 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
+\documentclass[a4paper,man,natbib,11pt]{article}
+\textwidth=7in
+\textheight=9.5in
+\topmargin=-1in
+\headheight=0in
+\headsep=.5in
+\hoffset  -.85in
 
-\title{ML Final Project: Predicting Dementia}
-\author{caroline_mills }
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{apacite}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,quotes}
+%\usepackage{lineno}
+%\linenumbers
+\title{Predicting Dementia using Machine Learning Methods}
+\author{Peter Shewmaker, Nadia Mercado,Caroline Mills  }
 \date{April 2020}
 
 \begin{document}
@@ -10,5 +24,14 @@
 \maketitle
 
 \section{Introduction}
+
+Dementia and other cognitive decline diseases are a serious financial and medical global concern. As such, in this paper we will test statistical classification methods from statistical learning methods, logistic regression, support vectors machines, and naive baye's. We will present the classification accuracy, specificity, sensitivity, and area under the ROC curve for all classifier methods. 
+
+\section{Data}
+
+\section{Support Vector Machines}
+
+Support Vector Machine(SVM) is an approach for classification. The e1071 library in R was used to put a SVM to the data. 
+
 
 \end{document}
