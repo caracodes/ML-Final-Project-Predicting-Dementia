@@ -56,14 +56,26 @@ The aim then was to develop a statistical learning model that could take in pati
 Some of the cognitive tests chosen include: Logical Memory, which measures the number of components of a story a patient recalls immediately after being told the story. In the Animal/Vegetable test, the subject is asked to name as many animals (vegetables) as possible in 60 seconds. The Digit Span test involves giving a sequence of digits to a patient and asking them to repeat them, both in the forwards and backwards direction of the original sequence. The Trails test consists of a set of numbered (lettered) dots, and the patient is asked to connect the dots in numerical (alphabetical) order, the test is measured by the amount of time needed to complete the task.
 
 \subsection{Logistic Regression}
-We first started out with a logistic model because of it's interpretability of the coefficients. Of the 7,685 observations, 5,000 were selected as training data and the remaining 2,639 were selected as test data. No transformations were preformed on any of the variables since we don't want to risk complicating the interpretation of the coefficients and odds's ratios associated to the transformed covariate. Stepwise selection was preformed with The Akaike information criterion (AIC) as a metric. We elected to include all variables. 
+Logistic regression is a commonly used model in predicting adverse outcomes in public health literature due to the ease of interpretation of coefficients and is a powerful classification algorithm. We will evaluate the predictive accuracy of the model In terms of overall classification accuracy, specificity, sensitivity, along with Random Forrest and Support Vector Machine(SVM). Of the 7,685 observations,  5,000 were classified as training data and the remaining 2,639 were classified as test data. 
 
-We created an ROC curve (receiver operating characteristic curve) which will loop through all possible cutoffs, and plot the sensitivity and specificity. As we can see, there is a trade off between 
+First, we fit the logistic model to the training data. No transformations were preformed on any of the variables since we don't want to risk complicating the interpretation of the coefficients and odds's ratios associated to the transformed covariates. Stepwise selection was preformed with the Akaike information criterion (AIC) as a metric. We elected to include all variables since there was a minimal change in improvement. The fitted results were then applied to the test data. 
+
+There are several methods to select a cut-off value. In many cases, c=0.50 is the most optimal choice, however this is not always the case especially for unbalanced data. For this model, we compared two cut-off classification methods 1) Youden Index which is max(Sensitivity+Specificity), a measurement considering both true positive rate and true negative rate and 2) the point closest to the top-left part of the plot with perfect sensitivity or specificity $min((1-sensitivities)^{2}+(1-specificities)^{2})$.The ROC curve below (receiver operating characteristic curve) shows the sensitivity and specificity trade-off for each cut-off value. 
+
 \begin{figure}[h!]
 \centering
   \includegraphics[width=0.5\textwidth]{roc_logistic.png}
   \caption{ROC for Testing Data}
 \end{figure}
+
+The results of the model were fitted to the test data. As we can see, when the classifier is set to 0.029 the model has the highest sensitivity and specificity.
+
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=0.5\textwidth]{roc_logistic.png}
+  \caption{ROC for Testing Data}
+\end{figure}
+
 
 \subsection{Classification Tree}
 
