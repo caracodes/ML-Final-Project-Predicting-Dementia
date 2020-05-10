@@ -23,6 +23,7 @@
 %packages for RSF portion
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{booktabs}
 \restylefloat{figure}
 
 \title{Predicting Dementia using Machine Learning Methods}
@@ -41,11 +42,11 @@ Dementia and other cognitive decline diseases are a serious financial and medica
 
 The data was drawn from the National Alzheimer's Coordinating Center's Uniform Data Set. Located at the University of Washington, the National Alzheimer's Coordinating Center (NACC) was founded in 1999 by the National Institute on Aging, a division of the National Institutes of Health. The goal of the NACC is to develop and maintain databases of Alzheimer's related research data. The NACC Uniform Data Set is intended to be ``the first and primary resource for researchers analyzing NACC clinical and demographic data''.
 
-The data contains one row for each clinic visit by a patient. It includes social, racial, educational demographic data, as well as cognitive test results, living situation, and smoking status. In order to use the data for the classification of dementia status, the last recorded visit by each patient included in the data was extracted.
+The data for the classification analysis contains one row for each clinic visit by a patient. It includes social, racial, educational demographic data, as well as cognitive test results, living situation, and smoking status. In order to use the data for the classification of dementia status, the last recorded visit by each patient included in the data was extracted.
 
-However, the data had to be restructured differently for the survival analysis. For this, we needed to create the time to event variable. This was constructed subtracting the age of the participant from the first visit and the age of the participant at the first diagnosis of dementia or the age of the participant at the end of follow up (up to 12 years). The information for each participant was only kept at the initial diagnosis of dementia or at the last recorded visit. Lastly, we filtered for variables with more than 5\% of missing data, omitted any variables that have a summary variable available, and filtered for complete cases. The final dataset now only contained 20 variables.
+However, the data had to be restructured differently for the survival analysis. For this analysis, we needed to create the time to event variable by subtracting the age of the participant from the first visit and the age of the participant at the first diagnosis of dementia or the age of the participant at the end of follow up (up to 12 years). The information for each participant was only kept at the initial diagnosis of dementia or at the last recorded visit. Lastly, we filtered for variables with more than 5\% of missing data, omitted any variables that have a summary variable available, and filtered for complete cases. The final dataset contained a total of 20 variables.
 
-\section{Classification by Test Scores - Peter Shewmaker}
+\section{Classification by Test Scores}
 
 Diagnosis of Alzheimer's disease and related dementias is often aided by the use of cognitive tests. The Uniform Data Set contains patient performance on a large variety of these cognitive tests. Some of these tests are owned by private companies or can only be administered by a medical professional. However, other tests could be simply administered by a loved one. 
 
@@ -66,72 +67,16 @@ There are several methods to select a cut-off value. In many cases, c=0.50 is th
   \caption{ROC for Testing Data}
 \end{figure}
 
-The results of the model were fitted to the test data. As we can see, when the classifier is set to 0.029 the model has the highest sensitivity and specificity. Therefor, this is the final model selected. Here are the coefficients and significance at a 95\% confidence level of the final model. 
+The results of the model were fitted to the test data. As we can see, when the classifier is set to 0.029 the model has the highest sensitivity and specificity. This algorithm was able to correctly identify 79 out of the 88 patients who did have dementia.  
 
-\begin{table}[!htbp] \centering 
-  \caption{} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-2} 
-\\[-1.8ex] & DEMENTED \\ 
-\hline \\[-1.8ex] 
- age\_visit & 0.038$^{***}$ \\ 
-  & (0.014) \\ 
-  & \\ 
- sex & 0.715$^{***}$ \\ 
-  & (0.259) \\ 
-  & \\ 
- ethnicity & $-$0.044 \\ 
-  & (0.031) \\ 
-  & \\ 
- educ & 0.028$^{**}$ \\ 
-  & (0.011) \\ 
-  & \\ 
- log\_mem\_imm & $-$0.365$^{***}$ \\ 
-  & (0.052) \\ 
-  & \\ 
- dspan\_for & 0.061 \\ 
-  & (0.066) \\ 
-  & \\ 
- dspan\_back & 0.144$^{**}$ \\ 
-  & (0.072) \\ 
-  & \\ 
- animal & $-$0.084$^{***}$ \\ 
-  & (0.032) \\ 
-  & \\ 
- vegetable & $-$0.233$^{***}$ \\ 
-  & (0.051) \\ 
-  & \\ 
- trails\_a & $-$0.004 \\ 
-  & (0.004) \\ 
-  & \\ 
- trails\_b & 0.009$^{***}$ \\ 
-  & (0.002) \\ 
-  & \\ 
- bnt & 0.024 \\ 
-  & (0.023) \\ 
-  & \\ 
- prediction & $-$0.738 \\ 
-  & (1.087) \\ 
-  & \\ 
- Constant & $-$4.366$^{***}$ \\ 
-  & (1.439) \\ 
-  & \\ 
-\hline \\[-1.8ex] 
-Observations & 5,000 \\ 
-Log Likelihood & $-$318.397 \\ 
-Akaike Inf. Crit. & 664.793 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=0.6\textwidth]{figures/cm_0.029.png}
+  \caption{Final Logistic Model}
+\end{figure}
 
 
-\subsection{Classification Tree}
+\subsection{Classification Tree - Peter Shewmaker}
 
 The second model used to classify patient's dementia status was a classification tree. Of the 7,685 rows in the original data, 46 rows were excluded due to missing data. Then, of the remaining 7,639 rows, 5,000 were selected to form the training data. The remaining 2,639 rows were set aside to be the test set.
 
@@ -153,7 +98,7 @@ The second model used to classify patient's dementia status was a classification
 \label{fig:test}
 \end{figure}
 
-The classification tree was created using the "rpart" package in R. Splits in the tree were made by the Gini index. The complexity parameter was chosen by repeated cross validation. The cross validation was performed using the R package "caret".
+The classification tree was created using the ``rpart'' package in R. Splits in the tree were made by the Gini index. The complexity parameter was chosen by repeated cross validation. The cross validation was performed using the R package ``caret''.
 
 In Figure 1 you can see graphical depictions of both the pruned and unpruned trees. The tree was pruned by classification error. We see that the Logical Memory, Trails, and Animal/Vegetable tests are commonly chosen as places to split the tree.
 
@@ -173,13 +118,13 @@ In Figure 1 you can see graphical depictions of both the pruned and unpruned tre
 
 The comparison of the confusion matrices of the results of the unpruned and pruned tree can be found in Figure 2. We see that the accuracy of the tree was slightly improved after pruning. However, we see that the pruned tree has a lower sensitivity, and classifies correctly fewer of the patients who actually have dementia. 
 
-\subsection{Random Forest with Downsampling}
+\subsection{Random Forest with Downsampling - Peter Shewmaker}
 
 Though the accuracy of each of the trees appears quite high, it is artificially inflated by the imbalance of the classes. Of the 2639 patients in the testing set, only 89 actually have Alzheimer's, which is 3.3\% of the test set. Therefore a decision tree that classified everyone as not having dementia would have a 96.7\% accuracy! 
 
 Therefore we would like the model used to account for the unbalanced classes. We also see that the trees created in the previous section have a very low sensitivity, which would make it a poor diagnostic screening tool. By accounting for the unbalanced classes, we hope to improve the sensitivity of the classifier.
 
-The method I used to account for the unbalanced classes is called \textit{downsampling}. In a downsampled random forest, instead of using a bootstrap sample from the entire training data set to create each tree, a bootstrap sample from the rare class is generated and a sample of the same size is generated from the common class are joined and used for the creation of the tree. Therefore each tree in the random forest model is built from a data set with the same number of observations in each class.
+The method I used to account for the unbalanced classes is called \textit{downsampling} \footnote{Chen, Chao & Breiman, Leo. (2004). Using Random Forest to Learn Imbalanced Data. University of California, Berkeley.}. In a downsampled random forest, instead of using a bootstrap sample from the entire training data set to create each tree, a bootstrap sample from the rare class is generated and a sample of the same size is generated from the common class are joined and used for the creation of the tree. Therefore each tree in the random forest model is built from a data set with the same number of observations in each class.
 
 For some other statistical learning algorithms, the use of downsampling would require getting rid of a large amount of the data. However, since random forest uses resampling, the downsampling can be applied while still making use of the entirety of the training set.
 
@@ -202,20 +147,52 @@ The random forest models were fit using the "caret" package. Cross validation wa
 The results of both the downsampled and the standard random forest models can be seen in Figure 3. Though the standard random forest model has a much higher accuracy (comparable to the classification trees), the downsampled random forest trades some accuracy for a drastic improvement in sensitivity. The sensitivity and specificity of the downsampled random forest are higher than 0.9, which means that it could be useful as a screening test. The algorithm was able to correctly identify 83 of the 89 patients who did in fact have dementia.
 
 \subsection{Support Vector Machine}
-The third model used to classify patient's dementia status was a support vector machine (SVM). This statistical learning model was selected since there is a clear margin of separation between classes and is  memory efficient. We will continue with 5,000  observations as training data and 2,639 as test data. SVM
+The third model used to classify patient's dementia status was a support vector machine (SVM). SVMs is a supervised learning model which is effective in high dimensional space and is versatile since various kernel functions can be selected for the decision function. However, the main disadvantage is that SVMs do not provide any probability estimates. 
 
-\\~\\ SVM's are f
-The e1071 library in R was used to put a SVM to the data. 
+This statistical learning model was selected since there is a clear margin of separation between classes and is  memory efficient. We will continue with 5,000  observations as training data and 2,639 as test data. All three kernels (linear,radial, polynomial,sigmoid) were compared on the basis of sensitivity and specificity. The linear support vector classifier had the worst AUC compared to the other kernels which signifies the data is is best separated by a non-linear class boundary. The polynomial kernel was found to have the highest AUC and best optimization for specificity and sensitivity. Values for each the parameters were selected using 10-fold cross validation ’ by a grid search in the interval of [0.001,100] for cost(c) and [2,10] for degree(d). The SVM was fit on the test data and the results for the polynomial SVM with c=5 and d=3 are shown below.
+
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=0.5\textwidth]{poly_first_mod.png}
+  \caption{ROC for Testing Data}
+\end{figure}
+
+
+As we can see, the accuracy of the SVM is high, however this is due to an artificial inflation of the classes. There are a number of methods to correct for unbalanced data. The first method I used was to search through a grid of class weights and pick the one yielding the highest AUC. However, this caused over fitting and the model preformed poorly on the test data.The second method I used was downsampling which is the method of "downsampling" the over-represented class so both dementia and non-dementia have the same amount of data. The disadvantage of downsampling is not all the data is used. 
+
+\begin{figure}[h!]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{poly_weighted.png}
+  \caption{SVM with Class Weights}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{final_poly.png}
+  \caption{SVM with Downsampling}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{Support Vector Machine Models}
+\label{fig:test}
+\end{figure}
+
+
+The results of both the class weights and downsampling method can be seen in figure 7. The original polynomial kernel model and the class weights model has the highest sensitivity, however both have low specificity. The downsampling model balances the trade-off between accuracy for a large improvement in specificity. As such, we select the dowwnsampling polynomial kernel model as the final SVM. We were able to classify 79 out of the 88 patients who have dementia correctly.
+
+\subsection{Conclusion}
+
+In summary, we have demonstrated for classification of dementia, statistical learning methods such as random forrest,support vector machine and logistic regression have potential to have high accuracy, sensitively, and specificity for cognitive tests that can be administered by a caretaker. Further work on this model should take into account a more diverse sample size since the majority of participants were homogeneous in terms of demographic variables. 
 
 \newpage
-
 \section{Survival Analysis with Random Forests - Nadia Mercado}
 
-The purpose of this project was to develop a model for dementia status using the NACC Alzheimer's data with the presence of the APOE genotype as our ``treatment group''. Random Survival Forests are a relatively new application which are an extension of Random Forest models to analyze time to event data. 
+The purpose of this analysis was to develop a model for dementia status using the NACC Alzheimer's data with the presence of the APOE genotype as our ``treatment group''. Random Survival Forests are a relatively new application which are an extension of Random Forest models to analyze time to event data. 
 
 Random Survival Forests (RSF) use the log-rank splitting rule to identify variable importance with each observation using a Kaplan-Meier estimator within each terminal node for each time event. This model has been found to maintain a low prediction error, are uniformly consistent, and have a uniform approximating property in finite-sample settings. 
 
-To develop the model, several R packages were explored. The first package ggRandomForests which is great for visually exploring survival models. This package also determines variable importance (VIMP) which is determined by the difference in the Out-of-Bag (OOB) prediction error before and after permutation. A large value indicates misspecification detracts from the predictive accuracy and a value close to zero or negative does not contribute to predictive accuracy or improves the predictive accuracy when the variable is misspecified. It can also determine variable importance by Minimal depth which assumes that variables with a high impact on the prediction are those that most frequently split nodes nearest to the root node and split the largest samples of the population. Another benefit of this package is the graphing capabilities where one can plot the predicted survival of each participant in the training or test data, look at variable dependence, partial dependence plots, and others. More information can be found in \href{https://arxiv.org/pdf/1612.08974.pdf}{Ehrlinger's paper} or the \href{https://cran.r-project.org/web/packages/ggRandomForests/index.html}{CRAN website}.
+To develop the model, several R packages were explored. The first package, ggRandomForests, is great for visually exploring survival models. This package also determines variable importance (VIMP) by the difference in the Out-of-Bag (OOB) prediction error before and after permutation. A large value indicates that misspecification will detract from the predictive accuracy and a value close to zero or negative does not contribute to predictive accuracy or improves the predictive accuracy when the variable is misspecified. It can also determine variable importance by Minimal depth which assumes that variables with a high impact on the prediction are those that most frequently split nodes nearest to the root node and split the largest samples of the population. Another benefit of this package is the graphing capabilities where one can plot the predicted survival of each participant in the training or test data, look at variable dependence, partial dependence plots, and others. More information can be found in \href{https://arxiv.org/pdf/1612.08974.pdf}{Ehrlinger's paper} or the \href{https://cran.r-project.org/web/packages/ggRandomForests/index.html}{CRAN website}.
 
 Another package is the ranger package which is commonly used for classification and regression random forests and can be extended to RSFs. This package uses the log-rank test for split criteria. Variable importance can be calculated as either VIMP or Minimal depth. It also calculates Harrell's C index, which can be described as a generalization of the ROC curve and can be used as a measure of prediction error where 1 - C-Index = Prediction Error. More information can be found in \href{https://arxiv.org/pdf/1508.04409.pdf}{Wright's and Zeigler's paper} or the \href{https://cran.r-project.org/web/packages/ranger/index.html}{CRAN website}.
 
@@ -230,12 +207,12 @@ Prior to any analysis or assessment, we first plotted the Kaplan-Meier curve to 
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/KM1.png}
+  \includegraphics[width=0.75\linewidth]{figures/KM1.png}
   \caption{Overall Kaplan-Meier}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/KM2.png}
+  \includegraphics[width=0.75\linewidth]{figures/KM2.png}
   \caption{Kaplan-Meier by APOE genotype}
 \end{subfigure}
 \caption{Comparison of Kaplan-Meier}
@@ -267,7 +244,7 @@ cdr\_global & 0.12 \\
 \label{ranger_vi}
 \end{table}
 
-We observe that cdr\_global (a summary measurement of cognition) and log\_mem\_imm (a measure of cognition by retelling a story) are the two top variables identified by the model. In addition, the Hartnell's index and prediction error are available in Table \ref{ranger_stat}.
+We observe that cdr\_global (a summary measurement of cognition) and log\_mem\_imm (a measure of cognition by retelling a story) are the two top variables identified by the model. In addition, the Hartnell's index and prediction error are available in Table \ref{ranger_stat}. This may indicate the model was developed with a low prediction error rate without any parameter tuning of the RSF model!
 
 %C index and pred error
 \begin{table}[ht]
@@ -339,7 +316,7 @@ apoe & 0.38 & 1.47 & 0.13 & 2.95 & 0.00 \\
 \end{table}
 
 
-Lastly, we can fit an ANOVA to see if adding the APOE genotype predictor improves model fit (Table \ref{anova}). For this, we are comparing the Cox model with and without the addition of the APOE genotype. Model 1 does not include the APOE genotype and Model 2 does include the APOE genotype. 
+Lastly, we can fit an ANOVA to see if adding the APOE genotype predictor improves model fit (Table \ref{anova} and \ref{GOF}). For this, we are comparing the Cox model with and without the addition of the APOE genotype. Model 1 does not include the APOE genotype and Model 2 does include the APOE genotype. 
 
 %anova for cox models
 \begin{table}[ht]
@@ -350,12 +327,30 @@ Lastly, we can fit an ANOVA to see if adding the APOE genotype predictor improve
   \hline
  & loglik & Chisq & Df & P($>$$|$Chi$|$) \\ 
   \hline
-1 & -1631.74 &  &  &  \\ 
-  2 & -1627.42 & 8.64 & 1 & 0.0033 \\ 
+Mod w/ APOE & -1631.74 &  &  &  \\ 
+  Mod w/o APOE & -1627.42 & 8.64 & 1 & 0.0033 \\ 
    \hline
 \end{tabular}
 \label{anova}
 \end{table}
+
+%fit statistics (merged table)
+\begin{table}[h!]
+\centering
+\caption{Fit Statistics for Hypothesis Tests}
+\begin{tabular}{rrrrrrr}
+\toprule
+& \multicolumn{3}{c}{Mod w/ APOE} & \multicolumn{3}{c}{Mod w/o APOE} \\
+  \cmidrule(r){2-4}\cmidrule(l){5-7}
+ & test & df & pvalue & test & df & pvalue \\ 
+  \midrule
+Log-Rank Test & 919.19 & 6.00 & 0.00 & 910.55 & 5.00 & 0.00 \\ 
+  Wald Test & 931.40 & 6.00 & 0.00 & 912.20 & 5.00 & 0.00 \\ 
+   \bottomrule
+\end{tabular}
+\label{GOF}
+\end{table}
+
 
 It appears as if the addition of the APOE genotype does improve model fit even though the RSF models did not rank APOE in the top 5 variables. Lastly, we can compare the survival curves for each of the models: Kaplan-Meier, Cox Proprotional Hazards, and RSF (Figure \ref{fig:all_curves}). 
 
@@ -367,8 +362,8 @@ It appears as if the addition of the APOE genotype does improve model fit even t
     \label{fig:all_curves}%
 \end{figure}
 
-\subsection{Conclusion}
-
 Random Survival Forests are an interesting and powerful tool to model survival curves and can eliminate some of the challenges that a linear or parametric model may have. However, there are some limitations to this analysis in R. Currently, there is little support for tuning the parameters in the RSF models. Although caret is a popular choice for this, Tidymodels is currently exploring the possibility to allow for turning in RSFs. In addition, RSFs are currently not capable of adjusting for time varying coefficients, but can still be assessed manually. Lastly, RSFs should not be used to model survival analysis and should be used as a tool to enhance our understanding and for model prediction, but interpretation may be difficult. Therefore, we should still explore other avenues of survival modeling such as a Cox Proportional Hazards model.
+
+
 
 \end{document}
