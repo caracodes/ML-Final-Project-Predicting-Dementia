@@ -22,9 +22,7 @@
 %\linenumbers
 %packages for RSF portion
 \usepackage{hyperref}
-\usepackage{subfig}
 \usepackage{float}
-\usepackage{wrapfig}
 \restylefloat{figure}
 
 \title{Predicting Dementia using Machine Learning Methods}
@@ -37,11 +35,11 @@
 
 \section{Introduction}
 
-Dementia and other cognitive decline diseases are a serious financial and medical global concern. As such, in this paper we will test statistical classification methods from statistical learning methods, logistic regression, support vectors machines, and naive baye's. We will present the classification accuracy, specificity, sensitivity, and area under the ROC curve for all classifier methods. In addition, we will also explore modeling the "survival" curve or time to event models for dementia status. 
+Dementia and other cognitive decline diseases are a serious financial and medical global concern. As such, in this paper we will test statistical classification methods from statistical learning methods, logistic regression, support vectors machines, and naive baye's. We will present the classification accuracy, specificity, sensitivity, and area under the ROC curve for all classifier methods. In addition, we will also explore modeling the ``survival'' curve or time to event models for dementia status. 
 
 \section{Data}
 
-The data was drawn from the National Alzheimer's Coordinating Center's Uniform Data Set. Located at the University of Washington, the National Alzheimer's Coordinating Center (NACC) was founded in 1999 by the National Institute on Aging, a division of the National Institutes of Health. The goal of the NACC is to develop and maintain databases of Alzheimer's related research data. The NACC Uniform Data Set is intended to be "the first and primary resource for researchers analyzing NACC clinical and demographic data".
+The data was drawn from the National Alzheimer's Coordinating Center's Uniform Data Set. Located at the University of Washington, the National Alzheimer's Coordinating Center (NACC) was founded in 1999 by the National Institute on Aging, a division of the National Institutes of Health. The goal of the NACC is to develop and maintain databases of Alzheimer's related research data. The NACC Uniform Data Set is intended to be ``the first and primary resource for researchers analyzing NACC clinical and demographic data''.
 
 The data contains one row for each clinic visit by a patient. It includes social, racial, educational demographic data, as well as cognitive test results, living situation, and smoking status. In order to use the data for the classification of dementia status, the last recorded visit by each patient included in the data was extracted.
 
@@ -68,13 +66,69 @@ There are several methods to select a cut-off value. In many cases, c=0.50 is th
   \caption{ROC for Testing Data}
 \end{figure}
 
-The results of the model were fitted to the test data. As we can see, when the classifier is set to 0.029 the model has the highest sensitivity and specificity.
+The results of the model were fitted to the test data. As we can see, when the classifier is set to 0.029 the model has the highest sensitivity and specificity. Therefor, this is the final model selected. Here are the coefficients and significance at a 95\% confidence level of the final model. 
 
-\begin{figure}[h!]
-\centering
-  \includegraphics[width=0.5\textwidth]{roc_logistic.png}
-  \caption{ROC for Testing Data}
-\end{figure}
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & DEMENTED \\ 
+\hline \\[-1.8ex] 
+ age\_visit & 0.038$^{***}$ \\ 
+  & (0.014) \\ 
+  & \\ 
+ sex & 0.715$^{***}$ \\ 
+  & (0.259) \\ 
+  & \\ 
+ ethnicity & $-$0.044 \\ 
+  & (0.031) \\ 
+  & \\ 
+ educ & 0.028$^{**}$ \\ 
+  & (0.011) \\ 
+  & \\ 
+ log\_mem\_imm & $-$0.365$^{***}$ \\ 
+  & (0.052) \\ 
+  & \\ 
+ dspan\_for & 0.061 \\ 
+  & (0.066) \\ 
+  & \\ 
+ dspan\_back & 0.144$^{**}$ \\ 
+  & (0.072) \\ 
+  & \\ 
+ animal & $-$0.084$^{***}$ \\ 
+  & (0.032) \\ 
+  & \\ 
+ vegetable & $-$0.233$^{***}$ \\ 
+  & (0.051) \\ 
+  & \\ 
+ trails\_a & $-$0.004 \\ 
+  & (0.004) \\ 
+  & \\ 
+ trails\_b & 0.009$^{***}$ \\ 
+  & (0.002) \\ 
+  & \\ 
+ bnt & 0.024 \\ 
+  & (0.023) \\ 
+  & \\ 
+ prediction & $-$0.738 \\ 
+  & (1.087) \\ 
+  & \\ 
+ Constant & $-$4.366$^{***}$ \\ 
+  & (1.439) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 5,000 \\ 
+Log Likelihood & $-$318.397 \\ 
+Akaike Inf. Crit. & 664.793 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
 
 
 \subsection{Classification Tree}
@@ -148,14 +202,16 @@ The random forest models were fit using the "caret" package. Cross validation wa
 The results of both the downsampled and the standard random forest models can be seen in Figure 3. Though the standard random forest model has a much higher accuracy (comparable to the classification trees), the downsampled random forest trades some accuracy for a drastic improvement in sensitivity. The sensitivity and specificity of the downsampled random forest are higher than 0.9, which means that it could be useful as a screening test. The algorithm was able to correctly identify 83 of the 89 patients who did in fact have dementia.
 
 \subsection{Support Vector Machine}
-The third model used to classify patient's dementia status was a support vector machine (SVM). This statistical learning model was selected since there is a clear margin of separation between classes and is  memory efficient. Of the 7,685 observations, 5,000 were selected as training data and the remaining 2,639 were selected as test data. 
+The third model used to classify patient's dementia status was a support vector machine (SVM). This statistical learning model was selected since there is a clear margin of separation between classes and is  memory efficient. We will continue with 5,000  observations as training data and 2,639 as test data. SVM
 
 \\~\\ SVM's are f
 The e1071 library in R was used to put a SVM to the data. 
 
+\newpage
+
 \section{Survival Analysis with Random Forests - Nadia Mercado}
 
-The purpose of this project was to develop a model for dementia status using the NACC Alzheimer's data with the presence of the APOE genotype as our "treatment group". Random Survival Forests are a relatively new application which are an extension of Random Forest models to analyze time to event data. 
+The purpose of this project was to develop a model for dementia status using the NACC Alzheimer's data with the presence of the APOE genotype as our ``treatment group''. Random Survival Forests are a relatively new application which are an extension of Random Forest models to analyze time to event data. 
 
 Random Survival Forests (RSF) use the log-rank splitting rule to identify variable importance with each observation using a Kaplan-Meier estimator within each terminal node for each time event. This model has been found to maintain a low prediction error, are uniformly consistent, and have a uniform approximating property in finite-sample settings. 
 
@@ -170,15 +226,20 @@ In this section, we developed a RSF model and assessed variable importance by pe
 Prior to any analysis or assessment, we first plotted the Kaplan-Meier curve to get an overall view if there is a difference between the survival curves for participants with and without the APOE genotype. 
 
 %KM comparison figure
-\begin{figure}[h!]%
-    \centering
-    \subfloat[Overall Kaplan-Meier]{%
-    {\includegraphics[width=5cm]{figures/KM1.PNG} }}%
-    \qquad
-    \subfloat[Kaplan-Meier by APOE genotype]{%
-    {\includegraphics[width=5cm]{figures/KM2.PNG} }}%
-    \caption{Comparison of Kaplain-Meier}%
-    \label{fig:KM}%
+\begin{figure}[h!]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/KM1.png}
+  \caption{Overall Kaplan-Meier}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/KM2.png}
+  \caption{Kaplan-Meier by APOE genotype}
+\end{subfigure}
+\caption{Comparison of Kaplan-Meier}
+\label{fig:KM}
 \end{figure}
 
 As seen in Figure \ref{fig:KM}, there does appear to be a difference in the survival curve for those with and without the APOE genotype.
@@ -224,7 +285,7 @@ We observe that cdr\_global (a summary measurement of cognition) and log\_mem\_i
 
 \subsection{RSF model: ggRandomForests package}
 
-We can get really great visuals from the ggRandomForests package in R. We can easily plot the prediction for each individual where the red lines represented the censored data (participants that did not experience the event of interest) and the uncensored data (participants that did experience the event of interest. This is illustrated in Figure \ref{fig:RSF_pred} 
+We can get really great visuals from the ggRandomForests package in R. We can easily plot the prediction for each individual where the red lines represented the censored data (participants that did not experience the event of interest) and the uncensored data (participants that did experience the event of interest. This is illustrated in Figure \ref{fig:RSF_pred}. 
 
 %all prediction graph
 \begin{figure}[h!]%
@@ -237,16 +298,23 @@ We can get really great visuals from the ggRandomForests package in R. We can ea
 We can also check the ggRandomForests package if VIMP or Minimal depth are calculated differently than the ranger package and is illustrated in Figure \ref{fig:ggVI}. 
 
 %ggRandomForest comparison figure
-\begin{figure}[h!]%
-    \centering
-    \subfloat[Permutation]{%
-    {\includegraphics[width=5cm]{figures/VI_SRF.jpeg} }}%
-    \qquad
-    \subfloat[Minimal Depth]{%
-    {\includegraphics[width=5cm]{figures/MD_SRF.jpeg} }}%
-    \caption{Comparison of Variable Importance}%
-    \label{fig:ggVI}%
+\begin{figure}[h!]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/VI_SRF.jpeg}
+  \caption{Permutation}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/MD_SRF.jpeg}
+  \caption{Minimal Depth}
+\end{subfigure}
+\caption{Comparison of Variable Importance}
+\label{fig:ggVI}
 \end{figure}
+
+
 
 \subsection{Cox Proportional Hazards model: survival package}
 
@@ -289,7 +357,7 @@ Lastly, we can fit an ANOVA to see if adding the APOE genotype predictor improve
 \label{anova}
 \end{table}
 
-It appears as if the addition of the APOE genotype does improve model fit even though the RSF models did not rank APOE in the top 5 variables. Lastly, we can compare the survival curves for each of the models: Kaplan-Meier, Cox Proprotional Hazards, and RSF (Figure \ref{fig:all_curves}. 
+It appears as if the addition of the APOE genotype does improve model fit even though the RSF models did not rank APOE in the top 5 variables. Lastly, we can compare the survival curves for each of the models: Kaplan-Meier, Cox Proprotional Hazards, and RSF (Figure \ref{fig:all_curves}). 
 
 %all prediction graph
 \begin{figure}[h!]%
